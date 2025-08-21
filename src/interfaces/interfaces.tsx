@@ -1,9 +1,19 @@
 export interface Location {
-    name:    string;
-    crs:     string;
-    tiploc:  string;
-    country: string;
-    system:  string;
+    serviceUid:           string;
+    runDate:              Date;
+    serviceType:          string;
+    isPassenger:          boolean;
+    trainIdentity:        string;
+    powerType:            string;
+    trainClass:           string;
+    atocCode:             string;
+    atocName:             string;
+    performanceMonitored: boolean;
+    origin:               Destination[];
+    destination:          Destination[];
+    locations:            LocationElement[];
+    realtimeActivated:    boolean;
+    runningIdentity:      string;
 }
 
 export interface Service {
@@ -44,4 +54,35 @@ export interface Destination {
     description: string;
     workingTime: string;
     publicTime:  string;
+}
+
+export enum DisplayAs {
+    Call = "CALL",
+    Destination = "DESTINATION",
+    Origin = "ORIGIN",
+}
+
+export interface LocationElement {
+    realtimeActivated:        boolean;
+    tiploc:                   string;
+    crs:                      string;
+    description:              string;
+    gbttBookedDeparture?:     string;
+    origin:                   Destination[];
+    destination:              Destination[];
+    isCall:                   boolean;
+    isPublicCall:             boolean;
+    realtimeDeparture?:       string;
+    realtimeDepartureActual?: boolean;
+    platform:                 string;
+    platformConfirmed:        boolean;
+    platformChanged:          boolean;
+    displayAs:                DisplayAs;
+    gbttBookedArrival?:       string;
+    realtimeArrival?:         string;
+    realtimeArrivalActual?:   boolean;
+    line?:                    string;
+    lineConfirmed?:           boolean;
+    path?:                    string;
+    pathConfirmed?:           boolean;
 }

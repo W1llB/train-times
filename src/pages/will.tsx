@@ -1,32 +1,47 @@
 
 import ServiceCard from "@/components/ServiceCard/ServiceCard";
-import { Service, Location } from "@/interfaces/interfaces";
+import DestinationToggleButton from "@/components/DestinationToggleButton/DestinationToggleButton";
+import { Location } from "@/interfaces/interfaces";
 import getJourneys from "@/modules/getJourney/getJourneys"
 import { useEffect, useState } from "react";
 
 export default function Will() {
-    const [journeys, setJourneys] = useState<Service[]>([])
-    const [station, setStation] = useState<Location>()
+    const home = "MAC";
+    const dest = "MAN";
+    const [route, setRoute] =  useState<[dep: string, arr: string]>([home, dest]);
+    const [journeys, setJourneys] = useState<Location[]>([])
+    const [toggleAlignment, setToggleAlignment] = useState(route[0]);
+
+
     useEffect(() => {
         const getResults = async () => {
-            const [location, services] = await getJourneys("MAN", "MAC");
-            setStation(location);
+            const services = await getJourneys(route[0], route[1]);
             setJourneys(services);
         }
         getResults()
-    }, [])
-    const listServices = journeys.slice(0,4).map((journey: Service) => {
-        return (<div key={journey["serviceUid"]}>
-                <ServiceCard journey={journey}></ServiceCard>
-                </div>
-        )
-        })
+    }, [route])
+
+    const handleToggleChange = (
+        event: React.MouseEvent<HTMLElement>,
+        newToggleAlignment: string,
+    ) => {
+        setToggleAlignment(newToggleAlignment);
+        setRoute([route[1], route[0]] = [route[1], route[0] ]);
+    };
+
     return (<div>
         <h1>Will</h1>
-        {station &&
-            <h2>{station["name"]}</h2>
+        <DestinationToggleButton toggleAlignment={toggleAlignment} handleToggleChange={handleToggleChange} route={[home, dest]}/>
+        {true &&
+            <h2>{route[0]} &rarr; {route[1]}</h2>
         }
-        
-        {listServices}
+        {journeys.length > 0 &&
+        journeys.map((journey: Location) => {
+            return (<div key={journey["serviceUid"]}>
+                    <ServiceCard journey={journey} depStation={route[0]}></ServiceCard>
+                    </div>
+            )
+            })
+    }
         </div>)
 }
