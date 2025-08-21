@@ -4,7 +4,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 
 interface Props {
-  handleToggleChange: (event: MouseEvent<HTMLElement, MouseEvent>, value: any) => void,
+  handleToggleChange: (event: React.MouseEvent<HTMLElement>, newToggleAlignment: string) => void,
   toggleAlignment: string,
   route: string[]
 }
