@@ -2,10 +2,9 @@ import * as React from 'react';
 import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { Location, LocationElement } from '@/interfaces/interfaces';
-import { Accordion, AccordionDetails, AccordionSummary, List, ListItem, ListItemText, Skeleton } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Skeleton } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useEffect, useState } from 'react';
 import StationStops from './StationStops';
@@ -15,10 +14,9 @@ interface Props {
     arrStation: string;
     depStation: string;
     journey: Location;
-    loading: boolean;
 }
 
-export default function ServiceCard({arrStation, depStation, journey, loading}: Props) {
+export default function ServiceCard({arrStation, depStation, journey}: Props) {
     const [serviceDetail, setServiceDetail] = useState<LocationElement>();
     const [stationStops, setStationStops] = useState<LocationElement[]>([]);
 
@@ -37,7 +35,8 @@ export default function ServiceCard({arrStation, depStation, journey, loading}: 
     useEffect(() => {
         retrieveStops();
         setServiceDetail(journey["locations"].find(location => location["crs"] === depStation));
-    }, [journey]);
+    }, [depStation, journey]);
+
     const arrivalTime = () => {
             return ( 
             <Typography gutterBottom variant="subtitle2" component="div" marginBottom={2} marginLeft={2}>
