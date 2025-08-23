@@ -3,7 +3,7 @@ export default async function getJourneys(dept: string, dest: string) {
     const apiUrl = process.env.NEXT_PUBLIC_REALTIME_TRAINS_ENDPOINT || "";
     const username = process.env.NEXT_PUBLIC_USERNAME || "";
     const password = process.env.NEXT_PUBLIC_PASSWORD || "";
-    const urlString = ( apiUrl ?? "http://localhost:8080") +`services/${dept}/to/${dest}`;
+    const urlString = ( apiUrl ?? "http://localhost:8080") +`json/services/${dept}/to/${dest}`;
     // const urlString = ( "http://localhost:8080/") +`services/${dept}/to/${dest}`;
 
 
