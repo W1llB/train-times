@@ -9,6 +9,8 @@ export default async function getJourneys(dept: string, dest: string) {
 
     try {
         const response = await fetchWithBasicAuth(urlString, username, password);
+        const response2 = await getServicesByRoute(dept, dest);
+        console.log("response2", response2);
         const json = await response.json()
         return json;
 

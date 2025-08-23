@@ -46,7 +46,7 @@ export default function RoutePage({destination, origin, title}: RoutePageProps) 
             <CircularProgress/>
             : journeys.map((journey: Location) => {
                 return (<div key={journey["serviceUid"]}>
-                        <ServiceCard journey={journey} depStation={route[0]} arrStation={route[1]} loading={loading}></ServiceCard>
+                        <ServiceCard journey={journey} depStation={route[0]} arrStation={route[1]}></ServiceCard>
                         </div>
                 )
             })
