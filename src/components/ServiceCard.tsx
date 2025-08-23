@@ -6,32 +6,41 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { Location, LocationElement } from '@/interfaces/interfaces';
 import { Accordion, AccordionDetails, AccordionSummary, List, ListItem, ListItemText } from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useEffect, useState } from 'react';
+import StationStops from './StationStops';
 
 
 interface Props {
     journey: Location;
     depStation: string;
+    arrStation: string;
 }
 
-export default function ServiceCard({journey, depStation}: Props) {
+export default function ServiceCard({journey, depStation, arrStation}: Props) {
     const [serviceDetail, setServiceDetail] = useState<LocationElement>();
-    const [remainingStationStops, setRemainingStationStops] = useState<LocationElement[]>([]);
-    useEffect(() => {
-        console.log("journey", journey);
-        journey["locations"].forEach((location, index) => {
-            if (location["crs"] === depStation) {
-                setServiceDetail(location);
-                setRemainingStationStops(journey["locations"].slice(index, -1));
-                console.log(remainingStationStops);
-                return;                
+    const [stationStops, setStationStops] = useState<LocationElement[]>([]);
+
+    const retrieveStops = () => {
+        if(journey) {
+            const startIndex = journey["locations"].findIndex(location => location["crs"] === depStation);
+            const endIndex = journey["locations"].findIndex(location => location["crs"] === arrStation);
+            if (startIndex !== -1) {
+                setStationStops(journey["locations"].slice(startIndex, endIndex + 1));
             }
-        })
+        }
+    }
+    useEffect(() => {
+        retrieveStops();
+        console.log("journey", journey);
+        setServiceDetail(journey["locations"].find(location => location["crs"] === depStation));
     }, [journey]);
+
     return (
         <Card variant="outlined" sx={{ maxWidth: 360 }}>
-            {serviceDetail && <div>
-            <Box sx={{ p: 2 }}>
+            {serviceDetail &&
+            <div>
+            <Box sx={{ p: 1 }}>
             <Stack
                 direction="row"
                 sx={{ justifyContent: 'space-between', alignItems: 'center' }}
@@ -39,14 +48,14 @@ export default function ServiceCard({journey, depStation}: Props) {
                 <Typography gutterBottom variant="h5" component="div">
                 {journey["destination"][0]["description"]}
                 </Typography>
-                <Typography gutterBottom variant="h6" component="div">
+                <Typography gutterBottom variant="subtitle2" component="div" marginBottom={2} marginLeft={2}>
                 {serviceDetail["realtimeDeparture"]}
                 </Typography>
             </Stack>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Expected Platform: {serviceDetail["platform"]}
+            Platform: {serviceDetail["platform"]}
             <br></br>
-            Expected arrival: {serviceDetail["destination"][0]["publicTime"]}
+            Arrival at {arrStation}: {serviceDetail["destination"][0]["publicTime"]}
             </Typography>
             </Box>
             <Divider />
@@ -54,18 +63,12 @@ export default function ServiceCard({journey, depStation}: Props) {
             <AccordionSummary
             aria-controls="panel1-content"
             id="panel1-header"
+            expandIcon={<ArrowDropDownIcon />}
             >
-            <Typography component="span">Stops {remainingStationStops.length}</Typography>
+            <Typography component="span">Stops {stationStops.length}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                <List>
-                <ListItem disablePadding>
-                <ListItemText primary="Inbox" />
-                </ListItem>
-                <ListItem disablePadding>
-                <ListItemText primary="Drafts" />
-                </ListItem>
-            </List>
+                <StationStops stops={stationStops}/>
             </AccordionDetails>
         </Accordion>
         </div>}
