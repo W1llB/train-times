@@ -5,19 +5,20 @@ import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import { Location, LocationElement } from '@/interfaces/interfaces';
-import { Accordion, AccordionDetails, AccordionSummary, List, ListItem, ListItemText } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, List, ListItem, ListItemText, Skeleton } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useEffect, useState } from 'react';
 import StationStops from './StationStops';
 
 
 interface Props {
-    journey: Location;
-    depStation: string;
     arrStation: string;
+    depStation: string;
+    journey: Location;
+    loading: boolean;
 }
 
-export default function ServiceCard({journey, depStation, arrStation}: Props) {
+export default function ServiceCard({arrStation, depStation, journey, loading}: Props) {
     const [serviceDetail, setServiceDetail] = useState<LocationElement>();
     const [stationStops, setStationStops] = useState<LocationElement[]>([]);
 
@@ -30,15 +31,22 @@ export default function ServiceCard({journey, depStation, arrStation}: Props) {
             }
         }
     }
+    const isServiceDelayed = () => {
+        return serviceDetail?.gbttBookedDeparture !== serviceDetail?.realtimeDeparture;
+    }
     useEffect(() => {
         retrieveStops();
-        console.log("journey", journey);
         setServiceDetail(journey["locations"].find(location => location["crs"] === depStation));
     }, [journey]);
-
+    const arrivalTime = () => {
+            return ( 
+            <Typography gutterBottom variant="subtitle2" component="div" marginBottom={2} marginLeft={2}>
+                {isServiceDelayed() && <s>{serviceDetail?.gbttBookedDeparture}</s>} {serviceDetail?.realtimeDeparture}
+            </Typography>)
+    }
     return (
         <Card variant="outlined" sx={{ maxWidth: 360 }}>
-            {serviceDetail &&
+            {serviceDetail ? (
             <div>
             <Box sx={{ p: 1 }}>
             <Stack
@@ -48,9 +56,7 @@ export default function ServiceCard({journey, depStation, arrStation}: Props) {
                 <Typography gutterBottom variant="h5" component="div">
                 {journey["destination"][0]["description"]}
                 </Typography>
-                <Typography gutterBottom variant="subtitle2" component="div" marginBottom={2} marginLeft={2}>
-                {serviceDetail["realtimeDeparture"]}
-                </Typography>
+                {arrivalTime()}
             </Stack>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             Platform: {serviceDetail["platform"]}
@@ -58,7 +64,6 @@ export default function ServiceCard({journey, depStation, arrStation}: Props) {
             Arrival at {arrStation}: {serviceDetail["destination"][0]["publicTime"]}
             </Typography>
             </Box>
-            <Divider />
             <Accordion>
             <AccordionSummary
             aria-controls="panel1-content"
@@ -71,7 +76,7 @@ export default function ServiceCard({journey, depStation, arrStation}: Props) {
                 <StationStops stops={stationStops}/>
             </AccordionDetails>
         </Accordion>
-        </div>}
+        </div>) : <Skeleton variant="rectangular" width={360} height={118} />}
         </Card>
     );
 }
