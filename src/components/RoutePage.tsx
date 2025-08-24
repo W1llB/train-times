@@ -4,7 +4,7 @@ import DestinationToggleButton from "./DestinationToggleButton";
 import { Location } from "@/interfaces/interfaces";
 import getJourneys from "@/modules/getJourney/getJourneys"
 import { useEffect, useState } from "react";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 interface RoutePageProps {
     destination: string;
@@ -24,11 +24,10 @@ export default function RoutePage({destination, origin, title}: RoutePageProps) 
     }
     useEffect(() => {
         setLoading(true);
-
         getResults()
         setLoading(false);
     }, [route])
-
+    
     const handleToggleChange = (
         event: React.MouseEvent<HTMLElement>,
         newToggleAlignment: string,
@@ -42,15 +41,15 @@ export default function RoutePage({destination, origin, title}: RoutePageProps) 
         <h1>{title}</h1>
         <DestinationToggleButton toggleAlignment={toggleAlignment} handleToggleChange={handleToggleChange} route={[origin, destination]}/>
         <h2>{route[0]} &rarr; {route[1]}</h2>
-        {(loading ?
+        {loading &&
             <CircularProgress/>
-            : journeys.map((journey: Location) => {
+        }
+        {journeys ? journeys.map((journey: Location) => {
                 return (<div key={journey["serviceUid"]}>
                         <ServiceCard journey={journey} depStation={route[0]} arrStation={route[1]}></ServiceCard>
                         </div>
                 )
-            })
-        )
+            }) : <Typography variant="subtitle2">No services found</Typography>
         }
         </Box>)
 }
