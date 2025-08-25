@@ -4,6 +4,7 @@ export default async function getJourneys(dept: string, dest: string) {
     const urlString = ( apiUrl ?? "http://localhost:8080") +`/services/${dept}/to/${dest}`;
 
     console.log("apiurl", apiUrl)
+    console.log("urlString", urlString)
 
     try {
         const response = await fetch(urlString)
