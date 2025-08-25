@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Set environment variables for the build
-ENV NEXT_PUBLIC_API_ENDPOINT=NEXT_PUBLIC_API_ENDPOINT
+ENV NEXT_PUBLIC_API_ENDPOINT=$NEXT_PUBLIC_API_ENDPOINT
 
 # Build the Next.js application
 RUN npm run build
