@@ -2,8 +2,9 @@
 export default async function getJourneys(dept: string, dest: string) {
     // env
     const apiUrl = process.env.NEXT_PUBLIC_TRAINS_API;
+    const corsProxy = process.env.NEXT_PUBLIC_CORS_PROXY || '';
     console.log(process.env.NEXT_PUBLIC_USERNAME)
-    const urlString = apiUrl +`json/search/${dept}/to/${dest}`;
+    const urlString = corsProxy + apiUrl +`json/search/${dept}/to/${dest}`;
 
     console.log("apiurl", apiUrl)
     console.log("urlString", urlString)
