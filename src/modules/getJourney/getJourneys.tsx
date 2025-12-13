@@ -6,7 +6,8 @@ const corsProxy = process.env.NEXT_PUBLIC_CORS_PROXY || '';
 const headers = new Headers({
     "Content-Type": "application/json",
     "Accept": "application/json",
-    "Authorization": "Basic " + btoa(`${process.env.NEXT_PUBLIC_USERNAME}:${process.env.NEXT_PUBLIC_PASSWORD}`)
+    "Authorization": "Basic " + btoa(`${process.env.NEXT_PUBLIC_USERNAME}:${process.env.NEXT_PUBLIC_PASSWORD}`),
+    "X-Requested-With": "XMLHttpRequest"
 });
 
 
