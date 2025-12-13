@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Location, LocationElement } from '@/interfaces/interfaces';
+import { DetailedService, LocationDetailElement, LocationElement } from '@/interfaces/interfaces';
 import { Accordion, AccordionDetails, AccordionSummary, Skeleton } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useEffect, useState } from 'react';
@@ -13,19 +13,19 @@ import StationStops from './StationStops';
 interface Props {
     arrStation: string;
     depStation: string;
-    journey: Location;
+    journey: DetailedService;
 }
 
 export default function ServiceCard({arrStation, depStation, journey}: Props) {
     const [serviceDetail, setServiceDetail] = useState<LocationElement>();
     const [stationStops, setStationStops] = useState<LocationElement[]>([]);
-
+    const locations: LocationDetailElement[] = journey.detail.locations
     const retrieveStops = () => {
         if(journey) {
-            const startIndex = journey["locations"].findIndex(location => location["crs"] === depStation);
-            const endIndex = journey["locations"].findIndex(location => location["crs"] === arrStation);
+            const startIndex = locations.findIndex(location => location["crs"] === depStation);
+            const endIndex = locations.findIndex(location => location["crs"] === arrStation);
             if (startIndex !== -1) {
-                setStationStops(journey["locations"].slice(startIndex, endIndex + 1));
+                setStationStops(locations.slice(startIndex, endIndex + 1));
             }
         }
     }
@@ -34,7 +34,7 @@ export default function ServiceCard({arrStation, depStation, journey}: Props) {
     }
     useEffect(() => {
         retrieveStops();
-        setServiceDetail(journey["locations"].find(location => location["crs"] === depStation));
+        setServiceDetail(locations.find(location => location["crs"] === depStation));
     }, [depStation, journey]);
 
     const arrivalTime = () => {
@@ -53,7 +53,7 @@ export default function ServiceCard({arrStation, depStation, journey}: Props) {
                 sx={{ justifyContent: 'space-between', alignItems: 'center' }}
             >
                 <Typography gutterBottom variant="h5" component="div">
-                {journey["destination"][0]["description"]}
+                {journey.detail.destination[0].description}
                 </Typography>
                 {arrivalTime()}
             </Stack>
