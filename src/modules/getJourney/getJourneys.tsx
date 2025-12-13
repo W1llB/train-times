@@ -1,7 +1,7 @@
 export default async function getJourneys(dept: string, dest: string) {
     // env
     const apiUrl = process.env.NEXT_PUBLIC_API_ENDPOINT || "";
-    const urlString = ( apiUrl ?? "http://localhost:8080") +`/services/${dept}/to/${dest}`;
+    const urlString = ( apiUrl ?? "http://localhost:8080") +`/services/${dept}/to/${dest}:443`;
 
     console.log("apiurl", apiUrl)
     console.log("urlString", urlString)
